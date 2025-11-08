@@ -1,0 +1,113 @@
+<% layout("/layouts/boilerplate") %>
+<%= success %>
+
+<body>
+  <!-- Filters Section -->
+   <% if (allListings.length === 0) { %>
+  <p class="text-center text-muted mt-4">No listings found in <%= category %> category.</p>
+<% } %>
+
+  <div id="filters">
+    <a href="/listings?category=Trending" class="filter">
+      <i class="fa-solid fa-fire"></i>
+      <p>Trending</p>
+    </a>
+    <a href="/listings?category=Rooms" class="filter">
+      <i class="fa-solid fa-bed"></i>
+      <p>Rooms</p>
+    </a>
+    <a href="/listings?category=Iconic cities" class="filter">
+      <i class="fa-solid fa-mountain-city"></i>
+      <p>Iconic Cities</p>
+    </a>
+    <a href="/listings?category=Waterside" class="filter">
+      <i class="fa-solid fa-umbrella-beach"></i>
+      <p>Waterside</p>
+    </a>
+    <a href="/listings?category=Mountains" class="filter">
+      <i class="fa-solid fa-mountain"></i>
+      <p>Mountains</p>
+    </a>
+    <a href="/listings?category=Castles" class="filter">
+      <i class="fa-brands fa-fort-awesome"></i>
+      <p>Castles</p>
+    </a>
+    <a href="/listings?category=Arctic" class="filter">
+      <i class="fa-solid fa-snowflake"></i>
+      <p>Arctic</p>
+    </a>
+    <a href="/listings?category=Campaign" class="filter">
+      <i class="fa-solid fa-tent"></i>
+      <p>Campaign</p>
+    </a>
+    <a href="/listings?category=Farms" class="filter">
+      <i class="fa-solid fa-tractor"></i>
+      <p>Farms</p>
+    </a>
+    <div class="tax-toggle">
+      <div class="form-check-reverse form-switch">
+  <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
+  <label class="form-check-label" for="switchCheckDefault">Display Taxes</label>
+</div>
+    </div>
+  </div>
+
+  <!-- Listings Section -->
+  <div class="row row-cols-lg-3 row-cols-md-3 row-cols-sm-1 row-cols-xs-1 mt-3">
+    <% if (allListings.length === 0) { %>
+      <p class="text-muted mt-3">No listings found in this category.</p>
+    <% } else { %>
+      <% for (let listing of allListings) { %>
+        <a href="/listings/<%= listing._id %>" class="listing-link">
+          <div class="card col listing-card mb-3">
+            <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_image" style="height: 20rem">
+            <div class="card-body">
+              <h5 class="card-title"><%= listing.title %></h5>
+              <p class="card-text">₹<%= listing.price.toLocaleString("en-IN") %>
+              <i class="tax-info">&nbsp; &nbsp; +18% GST </i> &nbsp;&nbsp;
+              <small class="text-muted"><%= listing.category %></small>
+            </p>
+            </div>
+          </div>
+        </a>
+      <% } %>
+    <% } %>
+  </div>
+
+  <script>
+  const currentCategory = "<%= category || '' %>";
+  const filters = document.querySelectorAll('.filter');
+
+  filters.forEach(filter => {
+    if (filter.querySelector('p').innerText.trim() === currentCategory) {
+      filter.classList.add('active');
+    }
+  });
+</script>
+
+  <script>
+    // Highlight the active filter
+    const params = new URLSearchParams(window.location.search);
+    const activeCategory = params.get("category");
+    if (activeCategory) {
+      document.querySelectorAll(".filter").forEach(filter => {
+        const text = filter.querySelector("p").textContent.trim();
+        if (text === activeCategory) filter.classList.add("active");
+      });
+    }
+  </script>
+
+  <script>
+    let taxSwitch = document.getElementById("switchCheckDefault");
+    taxSwitch.addEventListener("click", () => {
+      let taxInfo = document.getElementsByClassName('tax-info');
+      for(info of taxInfo) {
+        if (info.style.display != "inline") {
+          info.style.display = "inline";
+        } else {
+          info.style.display = "none";
+        }
+      }
+    });
+  </script>
+</body>
