@@ -78,6 +78,10 @@ app.use((req, res, next) => {
     next();
 });
 
+const methodOverride = require("method-override");
+app.use(methodOverride("_method"));
+
+
 app.use('/listings', listingRouter);
 app.use('/listings/:id/reviews', reviewRouter);
 app.use('/', userRoutes);
