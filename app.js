@@ -50,8 +50,6 @@ store.on("error", () => {
     console.log("Error is there");
 })
 
-app.use('trust proxy', 1);
-
 const sessionOptions = {
     store,
     secret: process.env.SECRET,
@@ -59,6 +57,8 @@ const sessionOptions = {
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
+        secure: true,
+        sameSite: 'none',
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
