@@ -78,6 +78,13 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use((err, req, res, next)=> {
+    let {statusCode = 500, message="Something went wrong!"} = err;
+    // 🚨 TEMPORARILY SEND A TEXT RESPONSE INSTEAD OF RENDERING A FILE
+    res.status(statusCode).send(`Error ${statusCode}: ${message}. Check Render logs.`);
+    // res.status(statusCode).render("error.ejs", {message}) // Comment this line out!
+})
+
 app.use('/listings', listingRouter);
 app.use('/listings/:id/reviews', reviewRouter);
 app.use('/', userRoutes);
