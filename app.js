@@ -50,6 +50,8 @@ store.on("error", () => {
     console.log("Error is there");
 })
 
+app.use('trust proxy', 1);
+
 const sessionOptions = {
     store,
     secret: process.env.SECRET,
@@ -57,6 +59,8 @@ const sessionOptions = {
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
@@ -77,13 +81,6 @@ app.use((req, res, next) => {
     res.locals.currentUser = req.user;
     next();
 });
-
-app.use((err, req, res, next)=> {
-    let {statusCode = 500, message="Something went wrong!"} = err;
-    // 🚨 TEMPORARILY SEND A TEXT RESPONSE INSTEAD OF RENDERING A FILE
-    res.status(statusCode).send(`Error ${statusCode}: ${message}. Check Render logs.`);
-    // res.status(statusCode).render("error.ejs", {message}) // Comment this line out!
-})
 
 app.use('/listings', listingRouter);
 app.use('/listings/:id/reviews', reviewRouter);
