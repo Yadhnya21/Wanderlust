@@ -97,7 +97,7 @@ module.exports.renderEditForm = async (req, res) => {
 module.exports.updateListing = async (req, res, next) => {
   try {
     let { id } = req.params;
-    const listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    const listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing }, {runValidators: true, new: true});
 
     // 📍 Update location coordinates if location changes
     if (req.body.listing.location) {
